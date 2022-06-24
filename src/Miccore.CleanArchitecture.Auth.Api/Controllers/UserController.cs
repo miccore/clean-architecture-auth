@@ -222,5 +222,49 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
                 return HandleErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+        /// <summary>
+        /// update user password
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut(template: "update/password", Name = nameof(UpdatePasswordUser))]
+        public async Task<ActionResult<UserResponse>> UpdatePasswordUser([FromBody] UpdateUserPasswordCommand command)
+        {
+            try
+            {
+                // validate command
+                var validator = new UpdateUserPasswordValidator();
+                var validate = validator.Validate(command);
+                if(!validate.IsValid){
+                    throw new ValidatorException(validate.ToString());
+                }
+
+                // call command
+                var updated = await _mediator.Send(command);
+
+                // return response
+                return HandleSuccessResponse(updated);
+
+            }
+            // not found exception
+            catch (NotFoundException notFound)
+            {
+                return HandleErrorResponse(HttpStatusCode.NotFound, notFound.Message);
+            }
+            // invalid data validation exception
+            catch (ValidatorException invalid)
+            {
+                return HandleErrorResponse(HttpStatusCode.BadRequest, invalid.Message);
+            }
+            // general exception
+            catch (Exception ex)
+            {
+                return HandleErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
     }
 }

@@ -5,17 +5,21 @@ using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 namespace Miccore.CleanArchitecture.Auth.Api.Validators.User
 {
     /// <summary>
-    /// validator of creation
+    /// validator of update
     /// </summary>
-    public class CreateUserValidator : AbstractValidator<CreateUserCommand>
+    public class UpdateUserPasswordValidator : AbstractValidator<UpdateUserPasswordCommand>
     {
-        public CreateUserValidator(){
+        public UpdateUserPasswordValidator(){
             
-            RuleFor(x => x.FirstName)
-                .NotEmpty().WithMessage("FIRSTNAME_"+ValidatorEnum.NOT_EMPTY.ToString())
-                .NotNull().WithMessage("FIRSTNAME_"+ValidatorEnum.NOT_NULL.ToString());
+            RuleFor(x => x.Id)
+                .NotEmpty().WithMessage("ID_"+ValidatorEnum.NOT_EMPTY.ToString())
+                .NotNull().WithMessage("ID_"+ValidatorEnum.NOT_NULL.ToString());
             
-            RuleFor(x => x.Password)
+            RuleFor(x => x.OldPassword)
+                .NotEmpty().WithMessage("OLDPASSWORD_"+ValidatorEnum.NOT_EMPTY.ToString())
+                .NotNull().WithMessage("OLDPASSWORD_"+ValidatorEnum.NOT_NULL.ToString());
+            
+            RuleFor(x => x.NewPassword)
                 .NotEmpty().WithMessage("PASSWORD_"+ValidatorEnum.NOT_EMPTY.ToString())
                 .NotNull().WithMessage("PASSWORD_"+ValidatorEnum.NOT_NULL.ToString())
                 .MinimumLength(8).WithMessage(ValidatorEnum.PASSWORD_MINIMUM_LENGTH_8.ToString())
@@ -24,10 +28,6 @@ namespace Miccore.CleanArchitecture.Auth.Api.Validators.User
                 .Matches(@"[a-z]+").WithMessage(ValidatorEnum.PASSWORD_MUST_CONTAIN__ONE_LOWERCASE_LETTER.ToString())
                 .Matches(@"[0-9]+").WithMessage(ValidatorEnum.PASSWORD_MUST_CONTAIN_ONE_NUMBER.ToString())
                 .Matches(@"[\!\?\*\.]+").WithMessage(ValidatorEnum.PASSWORD_MUST_CONTAIN_AT_LEAST_SPECIAL_CHARS.ToString()+"_(!? *.)");
-            
-            RuleFor(x => x.RoleId)
-                .NotEmpty()
-                .NotNull();
 
         }
     }

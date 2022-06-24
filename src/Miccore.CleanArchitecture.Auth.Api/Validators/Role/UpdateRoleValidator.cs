@@ -1,5 +1,6 @@
 using FluentValidation;
 using Miccore.CleanArchitecture.Auth.Application.Commands.Role;
+using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 
 namespace Miccore.CleanArchitecture.Auth.Api.Validators.Role
 {
@@ -11,12 +12,12 @@ namespace Miccore.CleanArchitecture.Auth.Api.Validators.Role
         public UpdateRoleValidator(){
             
             RuleFor(x => x.Id)
-                .NotEmpty()
-                .NotNull();
+                .NotEmpty().WithMessage("ID_"+ValidatorEnum.NOT_EMPTY.ToString())
+                .NotNull().WithMessage("ID_"+ValidatorEnum.NOT_NULL.ToString());
 
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .NotNull();
+                .NotEmpty().WithMessage("NAME_"+ValidatorEnum.NOT_EMPTY.ToString())
+                .NotNull().WithMessage("NAME_"+ValidatorEnum.NOT_NULL.ToString());
 
         }
     }

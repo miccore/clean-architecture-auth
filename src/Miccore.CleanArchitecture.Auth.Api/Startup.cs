@@ -2,6 +2,9 @@ using Microsoft.OpenApi.Models;
 using FluentValidation.AspNetCore;
 using Miccore.CleanArchitecture.Auth.Infrastructure.Persistances;
 using Miccore.CleanArchitecture.Auth.Application.Dependency;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Miccore.CleanArchitecture.Auth.Api
 {
@@ -72,7 +75,23 @@ namespace Miccore.CleanArchitecture.Auth.Api
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
             services.AddAutoMapper(typeof(Startup));
-
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.SaveToken = true;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = "",
+                            ValidAudience = "",
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("322e9998-f1f0-494a-9b9d-aea4e0008888")),
+                            ClockSkew = TimeSpan.Zero
+                        };
+                    });
             #endregion
 
             #region functions
@@ -109,6 +128,8 @@ namespace Miccore.CleanArchitecture.Auth.Api
                 .AllowAnyHeader()
                 .SetIsOriginAllowed(origin => true) // allow any origin
                 .AllowCredentials());
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

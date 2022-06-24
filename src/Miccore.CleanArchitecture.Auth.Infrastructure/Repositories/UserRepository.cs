@@ -44,7 +44,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         {
              var user = await _context.Users
                                     .Include(x => x.Role)
-                                    .FirstOrDefaultAsync(x => x.Email == Email);
+                                    .FirstOrDefaultAsync(x => x.Email == Email && x.DeletedAt == 0);
             
 
             if (user is null){
@@ -63,7 +63,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         {
             var user = await _context.Users
                                     .Include(x => x.Role)
-                                    .FirstOrDefaultAsync(x => x.Phone == phone);
+                                    .FirstOrDefaultAsync(x => x.Phone == phone && x.DeletedAt == 0);
             
 
             if (user is null){
@@ -83,7 +83,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         {
             var user = await _context.Users
                                     .Include(x => x.Role)
-                                    .FirstOrDefaultAsync(x => x.RefreshToken == refresh);
+                                    .FirstOrDefaultAsync(x => x.RefreshToken == refresh && x.DeletedAt == 0);
             
 
             if (user is null){
@@ -103,7 +103,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
             Contract.Requires(entity is not null);
 
             var user = await _context.Users.FindAsync(entity.Id);
-            if (user is null)
+            if (user is null || user.DeletedAt is not 0)
             {
                 throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
             }
@@ -125,7 +125,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         {
             
             var user = await _context.Users.FindAsync(id);
-            if (user is null)
+            if (user is null || user.DeletedAt is not 0)
             {
                 throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
             }
@@ -147,7 +147,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
             Contract.Requires(user is not null);
 
             var userGet = await _context.Users.FindAsync(user.Id);
-            if (userGet is null)
+            if (userGet is null || user.DeletedAt is not 0)
             {
                 throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
             }

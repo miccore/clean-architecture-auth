@@ -40,7 +40,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         public new async Task<Miccore.CleanArchitecture.Auth.Core.Entities.Role> UpdateAsync(Miccore.CleanArchitecture.Auth.Core.Entities.User entity)
         {
             var role = await _context.Roles.FindAsync(entity.Id);
-            if (role is null)
+            if (role is null || role.DeletedAt is not 0)
             {
                 throw new NotFoundException(ExceptionEnum.ROLE_NOT_FOUND.ToString());
             }

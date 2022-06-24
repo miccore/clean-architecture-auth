@@ -1,3 +1,4 @@
+using Miccore.CleanArchitecture.Auth.Core.Entities;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.CleanArchitecture.Auth.Core.Repositories.Base;
@@ -11,7 +12,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
     /// implementation class of  core repository interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         protected readonly AuthApplicationDbContext _context;
 
@@ -49,7 +50,11 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
         /// <returns></returns>
         public async Task<PaginationModel<T>> GetAllAsync(PaginationQuery query)
         {
-            return await _context.Set<T>().PaginateAsync(query);
+            var entities =  await _context.Set<T>().PaginateAsync(query);
+            // remove all deleted
+            entities.Items.RemoveAll(x => x.DeletedAt is not 0);
+            
+            return entities;
         }
 
         /// <summary>
@@ -61,7 +66,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
         {
             var entity = await _context.Set<T>().FindAsync(id);
 
-            if(entity is null){
+            if(entity is null || entity.DeletedAt is not 0){
                 throw new NotFoundException(ExceptionEnum.NOT_FOUND.ToString());
             }
             

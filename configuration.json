@@ -103,6 +103,19 @@
 			"UpstreamPathTemplate": "/api/user/{id}",
 			"UpstreamHttpMethod":[ "GET", "PUT", "DELETE", "OPTIONS" ],
 			"SwaggerKey": "Users"
+		},
+		{ 
+			"DownstreamPathTemplate": "/user/update/password",
+			"DownstreamScheme": "http",
+			"DownstreamHostAndPorts": [
+				{
+					"Host":"localhost",
+					"Port": 5081
+				}
+			],
+			"UpstreamPathTemplate": "/api/user/update/password",
+			"UpstreamHttpMethod":[ "PUT", "OPTIONS" ],
+			"SwaggerKey": "Users"
 		}
     ],
     "SwaggerEndPoints": [

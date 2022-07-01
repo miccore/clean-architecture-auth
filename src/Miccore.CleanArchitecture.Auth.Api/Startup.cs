@@ -92,6 +92,18 @@ namespace Miccore.CleanArchitecture.Auth.Api
                             ClockSkew = TimeSpan.Zero
                         };
                     });
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy(name: "CorsPolicy", builder =>
+                {
+                    builder.WithOrigins(
+                            "links"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
             #endregion
 
             #region functions

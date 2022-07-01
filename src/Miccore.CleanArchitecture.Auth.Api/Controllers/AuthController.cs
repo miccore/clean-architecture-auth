@@ -10,6 +10,7 @@ using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.Pagination.Model;
 using Miccore.Pagination.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Miccore.CleanArchitecture.Auth.Api.Controllers
@@ -87,6 +88,7 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [HttpGet(template: "refresh/token", Name = nameof(RefreshToken))]
+        [EnableCors("CorsPolicy")]
         [Authorize]
         public async Task<ActionResult<AuthResponse>> RefreshToken()
         {

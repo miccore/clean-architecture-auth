@@ -136,8 +136,8 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
             try
             {
                 // check cookies
-                if (!(Request.Cookies.TryGetValue("X-Access-Token", out var refreshToken)))
-                    return HandleErrorResponse(HttpStatusCode.BadRequest, ExceptionEnum.COOCKIE_NOT_FOUND.ToString());
+                if (!(Request.Headers.TryGetValue("X-Access-Token", out var refreshToken)))
+                    return HandleErrorResponse(HttpStatusCode.BadRequest, ExceptionEnum.HEADER_NOT_FOUND.ToString());
 
                 var access = Request.Cookies.Where(x => x.Key == "X-Access-Token").FirstOrDefault();
 

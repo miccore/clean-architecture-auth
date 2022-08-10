@@ -136,13 +136,14 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
             try
             {
                 // check cookies
-                if (!(Request.Headers.TryGetValue("X-Access-Token", out var refreshToken)))
+                if (!(Request.Headers.TryGetValue("Authorization", out var accessToken)))
                     return HandleErrorResponse(HttpStatusCode.BadRequest, ExceptionEnum.HEADER_NOT_FOUND.ToString());
-
-                var access = Request.Cookies.Where(x => x.Key == "X-Access-Token").FirstOrDefault();
+                
+                var access = Request.Headers.Where(x => x.Key == "Authorization").FirstOrDefault();
+                accessToken = access.Value.ToString().Replace("Bearer ", "");
 
                 // create query
-                GetAuthenticatedUserQuery query = new GetAuthenticatedUserQuery(access.Value);
+                GetAuthenticatedUserQuery query = new GetAuthenticatedUserQuery(accessToken);
                 
                 // get user
                 var user = await _mediator.Send(query);

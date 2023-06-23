@@ -6,6 +6,9 @@ namespace Miccore.CleanArchitecture.Auth.Core.Enumerations
     {
         [Description("Coockie not found")]
         COOCKIE_NOT_FOUND,
+        
+        [Description("Header not found")]
+        HEADER_NOT_FOUND,
 
         [Description("Mapper Issue")]
         MAPPER_ISSUE,

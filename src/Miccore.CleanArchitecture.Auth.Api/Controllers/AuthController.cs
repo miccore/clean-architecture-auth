@@ -115,6 +115,11 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
                 return HandleSuccessResponse(refreshed);
 
             }
+            // not found exception
+            catch (NotFoundException notFound)
+            {
+                return HandleErrorResponse(HttpStatusCode.NotFound, notFound.Message);
+            }
             // general exception
             catch (Exception ex)
             {

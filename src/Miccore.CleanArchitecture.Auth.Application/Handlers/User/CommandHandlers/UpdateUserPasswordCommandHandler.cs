@@ -37,18 +37,9 @@ namespace Miccore.CleanArchitecture.Auth.Application.Handlers.User.CommandHandle
             if(!BC.Verify(request.OldPassword, user.Password)){
                 throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND_OR_PASSWORD_INCORRECT.ToString());
             }
-
-            // map request with the entity
-            var userEntity = UserMapper.Mapper.Map<Miccore.CleanArchitecture.Auth.Core.Entities.User>(request);
-
-            // check if it's mapped correctly
-            if(userEntity is null){
-                throw new ApplicationException(ExceptionEnum.MAPPER_ISSUE.ToString());
-            }
-
+      
             // add async with the repository
-            userEntity.Password = BC.HashPassword(request.NewPassword);
-            var updatedUser = await _userRepository.UpdateAsync(userEntity);
+            var updatedUser = await _userRepository.UpdatePasswordAsync(user, BC.HashPassword(request.NewPassword));
 
             //map with the response
             var userResponse = UserMapper.Mapper.Map<UserResponse>(updatedUser);

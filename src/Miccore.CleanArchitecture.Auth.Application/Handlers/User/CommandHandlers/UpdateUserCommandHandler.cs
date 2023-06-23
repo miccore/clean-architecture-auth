@@ -29,9 +29,6 @@ namespace Miccore.CleanArchitecture.Auth.Application.Handlers.User.CommandHandle
         /// <returns></returns>
         public async Task<UserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            // check if smple exist
-            var user = await _userRepository.GetByIdAsync(request.Id);
-
             // map request with the entity
             var userEntity = UserMapper.Mapper.Map<Miccore.CleanArchitecture.Auth.Core.Entities.User>(request);
 

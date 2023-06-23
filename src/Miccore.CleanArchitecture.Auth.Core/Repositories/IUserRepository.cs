@@ -11,7 +11,7 @@ namespace Miccore.CleanArchitecture.Auth.Core.Repositories
         Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> GetSingleByPhoneAsync(string phone);
         Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> GetSingleByEmailAsync(string Email);
         Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> GetSingleByRefreshTokenAsync(string refresh);
-        Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> UpdatePasswordAsync(int id, string newPassword);
+        Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> UpdatePasswordAsync(Miccore.CleanArchitecture.Auth.Core.Entities.User entity, string newPassword);
         Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> UpdateRefreshTokenAsync(Miccore.CleanArchitecture.Auth.Core.Entities.User user);
     }   
 }

@@ -29,9 +29,6 @@ namespace Miccore.CleanArchitecture.Auth.Application.Handlers.Role.CommandHandle
         /// <returns></returns>
         public async Task<RoleResponse> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
         {
-            // check if smple exist
-            var role = await _roleRepository.GetByIdAsync(request.Id);
-
             // map request with the entity
             var roleEntity = RoleMapper.Mapper.Map<Miccore.CleanArchitecture.Auth.Core.Entities.Role>(request);
 

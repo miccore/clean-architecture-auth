@@ -2,8 +2,10 @@ using Miccore.CleanArchitecture.Auth.Core.Entities;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.CleanArchitecture.Auth.Core.Repositories.Base;
+using Miccore.CleanArchitecture.Auth.Core.Utils;
 using Miccore.CleanArchitecture.Auth.Infrastructure.Data;
 using Miccore.Pagination.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
@@ -12,7 +14,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
     /// implementation class of  core repository interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public  class Repository<T> : IRepository<T> where T : BaseEntity
     {
         protected readonly AuthApplicationDbContext _context;
 
@@ -38,9 +40,17 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<T> DeleteAsync(int id)
+        public async  Task<T> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+           var entity = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id && x.DeletedAt == 0);
+            if (entity is null)
+            {
+                throw new NotFoundException(ExceptionEnum.NOT_FOUND.ToString());
+            }
+            entity.DeletedAt = DateUtils.GetCurrentTimeStamp();
+            await _context.SaveChangesAsync();
+
+            return entity;
         }
 
         /// <summary>
@@ -50,9 +60,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
         /// <returns></returns>
         public async Task<PaginationModel<T>> GetAllAsync(PaginationQuery query)
         {
-            var entities =  await _context.Set<T>().PaginateAsync(query);
-            // remove all deleted
-            entities.Items.RemoveAll(x => x.DeletedAt is not 0);
+            var entities =  await _context.Set<T>().Where(x => x.DeletedAt == 0).PaginateAsync(query);
             
             return entities;
         }
@@ -64,9 +72,9 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
         /// <returns></returns>
         public async Task<T> GetByIdAsync(int id)
         {
-            var entity = await _context.Set<T>().FindAsync(id);
+            var entity = await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id && x.DeletedAt == 0);
 
-            if(entity is null || entity.DeletedAt is not 0){
+            if(entity is null){
                 throw new NotFoundException(ExceptionEnum.NOT_FOUND.ToString());
             }
             
@@ -82,5 +90,6 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base
         {
             throw new NotImplementedException();
         }
+
     }
 }

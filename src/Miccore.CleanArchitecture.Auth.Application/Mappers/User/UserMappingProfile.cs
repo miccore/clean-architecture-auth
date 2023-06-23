@@ -20,6 +20,8 @@ namespace Miccore.CleanArchitecture.Auth.Application.Mappers
             CreateMap<Miccore.CleanArchitecture.Auth.Core.Entities.User, CreateUserCommand>().ReverseMap();
             // user update
             CreateMap<Miccore.CleanArchitecture.Auth.Core.Entities.User, UpdateUserCommand>().ReverseMap();
+            // user password update
+            CreateMap<Miccore.CleanArchitecture.Auth.Core.Entities.User, UpdateUserPasswordCommand>().ReverseMap();
             // user response pagination
             CreateMap<PaginationModel<Miccore.CleanArchitecture.Auth.Core.Entities.User>, PaginationModel<UserResponse>>().ReverseMap();
 

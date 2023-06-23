@@ -4,6 +4,7 @@ using Miccore.CleanArchitecture.Auth.Core.Repositories;
 using Miccore.CleanArchitecture.Auth.Core.Utils;
 using Miccore.CleanArchitecture.Auth.Infrastructure.Data;
 using Miccore.CleanArchitecture.Auth.Infrastructure.Repositories.Base;
+using Microsoft.EntityFrameworkCore;
 
 namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
 {
@@ -16,35 +17,20 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         /// <returns></returns>
         public RoleRepository(AuthApplicationDbContext context) : base(context) { }
         
-        /// <summary>
-        /// soft delete
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public new async Task DeleteAsync(int id)
-        {
-            var entity = await _context.Roles.FindAsync(id);
-            if (entity is null)
-            {
-                throw new NotFoundException(ExceptionEnum.ROLE_NOT_FOUND.ToString());
-            }
-            entity.DeletedAt = DateUtils.GetCurrentTimeStamp();
-            await _context.SaveChangesAsync();
-        }
 
         /// <summary>
         /// update auth entity
         /// </summary>
         /// <param name="auth"></param>
         /// <returns></returns>
-        public new async Task<Miccore.CleanArchitecture.Auth.Core.Entities.Role> UpdateAsync(Miccore.CleanArchitecture.Auth.Core.Entities.User entity)
+        public new async Task<Miccore.CleanArchitecture.Auth.Core.Entities.Role> UpdateAsync(Miccore.CleanArchitecture.Auth.Core.Entities.Role entity)
         {
-            var role = await _context.Roles.FindAsync(entity.Id);
-            if (role is null || role.DeletedAt is not 0)
+            var role = await _context.Set<Core.Entities.Role>().FirstOrDefaultAsync(x => x.Id == entity.Id && x.DeletedAt == 0);
+            if (role is null)
             {
                 throw new NotFoundException(ExceptionEnum.ROLE_NOT_FOUND.ToString());
             }
-
+            role.Name = entity.Name;
             role.UpdatedAt = DateUtils.GetCurrentTimeStamp();
             await _context.SaveChangesAsync();
 

@@ -30,7 +30,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Persistances
             // database connexion
             services.AddDbContext<AuthApplicationDbContext>(option =>
             {
-                option.UseMySql(connectionString, new MySqlServerVersion(new Version()));
+                option.UseMySql(connectionString, new MySqlServerVersion(new Version()), b => b.MigrationsAssembly("Miccore.CleanArchitecture.Sample.Api"));
             }, ServiceLifetime.Scoped);
 
             // add repositories

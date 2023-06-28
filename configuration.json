@@ -11,7 +11,7 @@
 			],
 			"UpstreamPathTemplate": "/api/auth/authenticated",
 			"UpstreamHttpMethod":[ "GET", "OPTIONS"],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		}, 
 		{ 
 			"DownstreamPathTemplate": "/auth/login",
@@ -24,7 +24,7 @@
 			],
 			"UpstreamPathTemplate": "/api/auth/login",
 			"UpstreamHttpMethod":[ "POST", "OPTIONS"],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		}, 
 		{ 
 			"DownstreamPathTemplate": "/auth/refresh/token",
@@ -37,7 +37,7 @@
 			],
 			"UpstreamPathTemplate": "/api/auth/refresh/token",
 			"UpstreamHttpMethod":[ "GET", "OPTIONS"],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		}, 
 		{ 
 			"DownstreamPathTemplate": "/role/{id}",
@@ -50,7 +50,7 @@
 			],
 			"UpstreamPathTemplate": "/api/role/{id}",
 			"UpstreamHttpMethod":[ "GET", "PUT", "DELETE", "OPTIONS" ],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		},
 		{ 
 			"DownstreamPathTemplate": "/role",
@@ -63,7 +63,7 @@
 			],
 			"UpstreamPathTemplate": "/api/role",
 			"UpstreamHttpMethod":[ "POST", "GET", "OPTIONS" ],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		}, 
 		{ 
 			"DownstreamPathTemplate": "/role/{id}",
@@ -76,7 +76,7 @@
 			],
 			"UpstreamPathTemplate": "/api/role/{id}",
 			"UpstreamHttpMethod":[ "GET", "PUT", "DELETE", "OPTIONS" ],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		},
 		{ 
 			"DownstreamPathTemplate": "/user",
@@ -89,7 +89,7 @@
 			],
 			"UpstreamPathTemplate": "/api/user",
 			"UpstreamHttpMethod":[ "POST", "GET", "OPTIONS" ],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		}, 
 		{ 
 			"DownstreamPathTemplate": "/user/{id}",
@@ -102,7 +102,7 @@
 			],
 			"UpstreamPathTemplate": "/api/user/{id}",
 			"UpstreamHttpMethod":[ "GET", "PUT", "DELETE", "OPTIONS" ],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		},
 		{ 
 			"DownstreamPathTemplate": "/user/update/password",
@@ -115,12 +115,12 @@
 			],
 			"UpstreamPathTemplate": "/api/user/update/password",
 			"UpstreamHttpMethod":[ "PUT", "OPTIONS" ],
-			"SwaggerKey": "Users"
+			"SwaggerKey": "Auths"
 		}
     ],
     "SwaggerEndPoints": [
 		{ 
-			"Key": "Users",
+			"Key": "Auths",
 			"Config": [
 				{
 					"Name":"User Microservice API",

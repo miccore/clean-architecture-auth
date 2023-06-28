@@ -66,19 +66,6 @@
 			"SwaggerKey": "Auths"
 		}, 
 		{ 
-			"DownstreamPathTemplate": "/role/{id}",
-			"DownstreamScheme": "http",
-			"DownstreamHostAndPorts": [
-				{
-					"Host":"localhost",
-					"Port": 5081
-				}
-			],
-			"UpstreamPathTemplate": "/api/role/{id}",
-			"UpstreamHttpMethod":[ "GET", "PUT", "DELETE", "OPTIONS" ],
-			"SwaggerKey": "Auths"
-		},
-		{ 
 			"DownstreamPathTemplate": "/user",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [

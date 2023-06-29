@@ -25,7 +25,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Persistances
         {
 
             // get connection string from environment file
-            var connectionString = configuration.GetConnectionString("AuthDB");
+            var connectionString = $"server={configuration["Server"]};port={configuration["Port"]};database={configuration["Database"]};user={configuration["User"]};password={configuration["Password"]}";
 
             // database connexion
             services.AddDbContext<AuthApplicationDbContext>(option =>

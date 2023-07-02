@@ -11,6 +11,9 @@ namespace Miccore.CleanArchitecture.Auth.Core.Repositories.Base
     {
         Task<PaginationModel<T>> GetAllAsync(PaginationQuery query);
         Task<T> GetByIdAsync(int id);
+        Task<PaginationModel<T>> GetAllByParametersPaginatedAsync(PaginationQuery query, Expression<Func<T, bool>> WhereExpression);
+        Task<List<T>> GetAllByParametersAsync(Expression<Func<T, bool>> WhereExpression);
+        Task<T> GetByParametersAsync(Expression<Func<T, bool>> WhereExpression);
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(int id);

@@ -222,6 +222,7 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
                 return HandleErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+        
         /// <summary>
         /// update user password
         /// </summary>

@@ -25,12 +25,9 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         /// <returns></returns>
         public new async Task<Miccore.CleanArchitecture.Auth.Core.Entities.Role> UpdateAsync(Miccore.CleanArchitecture.Auth.Core.Entities.Role entity)
         {
-            var role = await _context.Set<Core.Entities.Role>().FirstOrDefaultAsync(x => x.Id == entity.Id && x.DeletedAt == 0);
-            if (role is null)
-            {
-                throw new NotFoundException(ExceptionEnum.ROLE_NOT_FOUND.ToString());
-            }
-            role.Name = entity.Name;
+            var role = await _context.Set<Core.Entities.Role>().FirstOrDefaultAsync(x => x.Id == entity.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.ROLE_NOT_FOUND.ToString());
+
+            role = SetValueForUpdateAsync(entity, role);
             role.UpdatedAt = DateUtils.GetCurrentTimeStamp();
             await _context.SaveChangesAsync();
 

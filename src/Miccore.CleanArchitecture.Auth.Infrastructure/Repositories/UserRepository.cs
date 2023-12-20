@@ -87,12 +87,9 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         {
             Contract.Requires(entity is not null);
 
-            var user = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == entity.Id && x.DeletedAt == 0);
-            if (user is null)
-            {
-                throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
-            }
-            user.FirstName = entity.FirstName;
+            var user = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == entity.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
+
+            user = SetValueForUpdateAsync(entity, user);
             user.UpdatedAt = DateUtils.GetCurrentTimeStamp();
             await _context.SaveChangesAsync();
 
@@ -110,11 +107,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         {
             Contract.Requires(entity is not null);
             
-            var user = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == entity.Id && x.DeletedAt == 0);
-            if (user is null)
-            {
-                throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
-            }
+            var user = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == entity.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
 
             user.Password = newPassword;
             user.UpdatedAt = DateUtils.GetCurrentTimeStamp();
@@ -132,11 +125,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         {
             Contract.Requires(user is not null);
 
-            var userGet = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == user.Id && x.DeletedAt == 0);
-            if (userGet is null)
-            {
-                throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
-            }
+            var userGet = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == user.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
 
             userGet.RefreshToken = user.RefreshToken;
             userGet.UpdatedAt = DateUtils.GetCurrentTimeStamp();

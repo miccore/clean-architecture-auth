@@ -17,7 +17,6 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         /// <returns></returns>
         public RoleRepository(AuthApplicationDbContext context) : base(context) { }
         
-
         /// <summary>
         /// update auth entity
         /// </summary>

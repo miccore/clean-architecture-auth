@@ -1,0 +1,17 @@
+{
+	"company": "Miccore",
+	"name": "CleanArchitecture",
+	"version": "1.0.0",
+    "type": "Single",
+	"projects": [
+		{ 
+			"name": "Auth",
+			"port": "8000",
+			"dockerUrl": "",
+			"kunernetesUrl": "cleanarchitecture-auth",
+			"context": "AuthApplicationDbContext",
+			"references": [],
+			"services": ["Auth", "User", "Role"]
+		}
+	]
+}

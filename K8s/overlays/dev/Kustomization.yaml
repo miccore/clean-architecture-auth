@@ -1,0 +1,9 @@
+images:
+  - name: cleanarchitecture-auth
+kind: Kustomization
+resources:
+- ../../base
+configMapGenerator:
+  - literals:
+    - ASPNETCORE_ENVIRONMENT="Development"
+    name: cleanarchitecture-auth-map-config

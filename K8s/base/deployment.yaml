@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cleanarchitecture-auth-deploy
+  labels:
+    app: cleanarchitecture-auth
+spec:
+  selector:
+    matchLabels:
+      app: cleanarchitecture-auth
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cleanarchitecture-auth
+    spec:
+      containers:
+      - name: cleanarchitecture-auth
+        image: cleanarchitecture-auth
+        ports:
+          - containerPort: 80      
+        imagePullPolicy: Never
+        envFrom:
+          - configMapRef:
+              name: cleanarchitecture-auth-map-config
+        volumeMounts:
+          - name: cleanarchitectureauthdata
+            mountPath: /app/wwwroot/
+      volumes:
+      - name: cleanarchitectureauthdata
+        hostPath:
+          path: /var/opt/app/wwwroot/
+          type: DirectoryOrCreate

@@ -1,7 +1,9 @@
 {
-  "ConnectionStrings": {
-    "AuthDB": "server=localhost;port=3306;database=authdb;user=user2;password=password"
-  },
+  "Server": "localhost",
+  "Port": "3306",
+  "Database": "authdb",
+  "User": "",
+  "Password": "",
   "Logging": {
     "LogLevel": {
       "Default": "Information",

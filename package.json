@@ -5,13 +5,13 @@
     "type": "Single",
 	"projects": [
 		{ 
-			"name": "Auth",
+			"name": "Sample",
 			"port": "8000",
 			"dockerUrl": "",
-			"kunernetesUrl": "cleanarchitecture-auth",
-			"context": "AuthApplicationDbContext",
+			"kunernetesUrl": "cleanarchitecture-sample",
+			"context": "SampleApplicationDbContext",
 			"references": [],
-			"services": ["Auth", "User", "Role"]
+			"services": ["User", "Role"]
 		}
 	]
 }

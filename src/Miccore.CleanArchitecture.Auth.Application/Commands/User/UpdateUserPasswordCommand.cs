@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Miccore.CleanArchitecture.Auth.Application.Responses.User;
 

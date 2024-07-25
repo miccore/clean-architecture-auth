@@ -1,10 +1,7 @@
-using System;
 using System.Threading;
 using FluentAssertions;
 using Miccore.CleanArchitecture.Auth.Application.Handlers.User.QueryHandlers;
-using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Queries.User;
-using Miccore.CleanArchitecture.Auth.Application.Responses.User;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.CleanArchitecture.Auth.Core.Utils;
@@ -20,6 +17,8 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
         /// mock class
         /// </summary>
         private UserMockClass _mock;
+        private readonly UserRepository _repository;
+        private readonly GetUserByIdQueryHandler _handler;
 
         /// <summary>
         /// initialisation of test objects
@@ -27,6 +26,12 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
         public UserQueryTestHandler_GetById(){
             // databse d=context
             _mock = new UserMockClass();
+
+            var mockDbContext = _mock.GetDbContext().Object;
+            
+            _repository = new UserRepository(mockDbContext);
+            
+            _handler = new GetUserByIdQueryHandler(_repository);
         }
 
 
@@ -39,13 +44,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
         [InlineData(1)]
         public async void UserQueryTestHandler_GetById_throw_not_found(int id){
             // arrange
-            var mockDbContext = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDbContext);
-            var handler = new GetUserByIdQueryHandler(repository);
             var request = new GetUserByIdQuery(id);
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.NOT_FOUND.ToString());
@@ -62,7 +64,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
         public async void UserQueryTestHandler_GetById_throw_not_found_with_Data_Deleted(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 1,
                     FirstName = "User 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -71,14 +73,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
                 }
             );
             
-
-            var mockDbContext = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDbContext);
-            var handler = new GetUserByIdQueryHandler(repository);
             var request = new GetUserByIdQuery(id);
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(request, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.NOT_FOUND.ToString());
@@ -95,7 +93,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
         public async void UserQueryTestHandler_GetById_found(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 12,
                     FirstName = "User 2",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -103,13 +101,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
                     UpdatedAt = 0
                 }
             );
-            var mockDbContext = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDbContext);
-            var handler = new GetUserByIdQueryHandler(repository);
             var request = new GetUserByIdQuery(id);
 
             // act
-            var result = await handler.Handle(request, CancellationToken.None);
+            var result = await _handler.Handle(request, CancellationToken.None);
 
             // assert
             result.Should().NotBeNull();

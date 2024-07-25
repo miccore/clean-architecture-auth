@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using Miccore.CleanArchitecture.Auth.Core.Utils;
 using Miccore.CleanArchitecture.Auth.Infrastructure.Data;
-using Miccore.Pagination.Model;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
@@ -12,17 +10,11 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User
     public class UserMockClass
     {   
 
-        public List<Miccore.CleanArchitecture.Auth.Core.Entities.User> _data;
-        public List<Miccore.CleanArchitecture.Auth.Core.Entities.Role> _role_data;
+        public List<Core.Entities.User> _data;
 
         public UserMockClass(){
             // iquerable data
-            _data = new List<Core.Entities.User>(){
-               
-            };
-            _role_data = new List<Core.Entities.Role>(){
-               
-            };
+            _data = new List<Core.Entities.User>() {};
         }
 
         /// <summary>
@@ -34,7 +26,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User
             // context database setup
             var options = new DbContextOptionsBuilder<AuthApplicationDbContext>().Options;
             var mockDbContext = new Mock<AuthApplicationDbContext>(options);
-            mockDbContext.SetupSequence(x => x.Set<Miccore.CleanArchitecture.Auth.Core.Entities.User>())
+            mockDbContext.SetupSequence(x => x.Set<Core.Entities.User>())
                         .ReturnsDbSet(_data);
             
             // return mock
@@ -42,19 +34,23 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User
         }
 
         /// <summary>
-        /// mock database context with empty data roles
+        /// générate data from users
         /// </summary>
-        /// <returns></returns>
-         public Mock<AuthApplicationDbContext> GetRoleDbContext(){
-            
-            // context database setup
-            var options = new DbContextOptionsBuilder<AuthApplicationDbContext>().Options;
-            var mockDbContext = new Mock<AuthApplicationDbContext>(options);
-            mockDbContext.SetupSequence(x => x.Set<Miccore.CleanArchitecture.Auth.Core.Entities.Role>())
-                        .ReturnsDbSet(_role_data);
-            
-            // return mock
-            return mockDbContext;
+        /// <param name="size"></param> <summary>
+        public void GenerateData(int size){
+
+            for (int i = 0; i < 9; i++)
+            {
+                _data.Add(
+                        new Core.Entities.User(){
+                            Id = i,
+                            FirstName = "User " + i,
+                            CreatedAt = DateUtils.GetCurrentTimeStamp(),
+                            DeletedAt = 0,
+                            UpdatedAt = 0
+                        }
+                );
+            }
         }
 
     }

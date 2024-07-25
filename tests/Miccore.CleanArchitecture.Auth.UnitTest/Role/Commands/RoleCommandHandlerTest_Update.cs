@@ -17,12 +17,20 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         /// mock class
         /// </summary>
         private readonly RoleMockClass _mock;
+        private readonly RoleRepository _repository;
+        private readonly UpdateRoleCommandHandler _handler;
 
         /// <summary>
         /// initialisation
         /// </summary>
         public RoleCommandHandlerTest_Update(){
             _mock = new RoleMockClass();
+
+            var mockDb = _mock.GetDbContext().Object;
+
+            _repository = new RoleRepository(mockDb);
+
+            _handler = new UpdateRoleCommandHandler(_repository);
         }
 
         /// <summary>
@@ -32,15 +40,11 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         [Fact]
         public async void RoleCommandHandlerTest_Update_Invalid_Mapping(){
             // arrange
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new UpdateRoleCommandHandler(repository);
-
             var command = new UpdateRoleCommand(){};
             command = null;
 
             // act
-             var ex = await Assert.ThrowsAsync<ApplicationException>(() => handler.Handle(command, CancellationToken.None));
+             var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.MAPPER_ISSUE.ToString());
@@ -55,15 +59,12 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         [InlineData(1)]
         public async void RoleCommandHandlerTest_Update_not_found(int id){
             // arrange
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new UpdateRoleCommandHandler(repository);
             var command = new UpdateRoleCommand(){
                 Id = id
             };
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.ROLE_NOT_FOUND.ToString());
@@ -79,7 +80,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         public async void RoleCommandHandlerTest_Update_deleted(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.Role(){
+                new Core.Entities.Role(){
                     Id = 1,
                     Name = "Role 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -87,15 +88,12 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new UpdateRoleCommandHandler(repository);
             var command = new UpdateRoleCommand(){
                 Id = id
             };
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.ROLE_NOT_FOUND.ToString());
@@ -111,7 +109,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         public async void RoleCommandHandlerTest_Update_successfull(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.Role(){
+                new Core.Entities.Role(){
                     Id = 1,
                     Name = "Role 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -119,16 +117,13 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new UpdateRoleCommandHandler(repository);
             var command = new UpdateRoleCommand(){
                 Id = id,
                 Name = "Role 1 updated"
             };
 
             // act
-            var result = await  handler.Handle(command, CancellationToken.None);
+            var result = await  _handler.Handle(command, CancellationToken.None);
 
             // assert
            result.Id.Should().Be(id);

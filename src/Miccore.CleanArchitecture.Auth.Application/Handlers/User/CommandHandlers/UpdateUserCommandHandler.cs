@@ -3,7 +3,6 @@ using Miccore.CleanArchitecture.Auth.Application.Commands.User;
 using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Responses.User;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
-using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.CleanArchitecture.Auth.Core.Repositories;
 
 namespace Miccore.CleanArchitecture.Auth.Application.Handlers.User.CommandHandlers
@@ -30,7 +29,7 @@ namespace Miccore.CleanArchitecture.Auth.Application.Handlers.User.CommandHandle
         public async Task<UserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             // map request with the entity
-            var userEntity = UserMapper.Mapper.Map<Miccore.CleanArchitecture.Auth.Core.Entities.User>(request);
+            var userEntity = UserMapper.Mapper.Map<Core.Entities.User>(request);
 
             // check if it's mapped correctly
             if(userEntity is null){

@@ -1,12 +1,8 @@
 using MediatR;
 using Miccore.CleanArchitecture.Auth.Application.Commands.Auth;
-using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Responses.Auth;
-using Miccore.CleanArchitecture.Auth.Core.Enumerations;
-using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.CleanArchitecture.Auth.Core.Repositories;
 using Miccore.CleanArchitecture.Auth.Core.Utils;
-using BC = BCrypt.Net.BCrypt;
 
 namespace Miccore.CleanArchitecture.Auth.Application.Handlers.Auth.CommandHandlers
 {

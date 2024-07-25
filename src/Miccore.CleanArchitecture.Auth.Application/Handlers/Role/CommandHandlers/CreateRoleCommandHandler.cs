@@ -4,7 +4,6 @@ using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Responses.Role;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Core.Repositories;
-using BC = BCrypt.Net.BCrypt;
 
 namespace Miccore.CleanArchitecture.Auth.Application.Handlers.Role.CommandHandlers
 {
@@ -32,7 +31,7 @@ namespace Miccore.CleanArchitecture.Auth.Application.Handlers.Role.CommandHandle
         public async Task<RoleResponse> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
         {
             // map request with the entity
-            var roleEntity = RoleMapper.Mapper.Map<Miccore.CleanArchitecture.Auth.Core.Entities.Role>(request);
+            var roleEntity = RoleMapper.Mapper.Map<Core.Entities.Role>(request);
 
             // check if it's mapped correctly
             if(roleEntity is null){

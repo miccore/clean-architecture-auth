@@ -1,6 +1,5 @@
 using MediatR;
 using Miccore.CleanArchitecture.Auth.Application.Commands.Auth;
-using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Responses.Auth;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Core.Exceptions;

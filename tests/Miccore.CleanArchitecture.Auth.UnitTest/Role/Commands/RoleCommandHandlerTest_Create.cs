@@ -15,12 +15,19 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         /// mock class
         /// </summary>
         private readonly RoleMockClass _mock;
+        private readonly RoleRepository _roleRepository;
+        private readonly CreateRoleCommandHandler _handler;
 
         /// <summary>
         /// initialisation of test objects
         /// </summary>
         public RoleCommandHandlerTest_Create(){
             _mock = new RoleMockClass();
+            
+            var mockDb = _mock.GetDbContext().Object;
+            
+            _roleRepository = new RoleRepository(mockDb);
+            _handler = new CreateRoleCommandHandler(_roleRepository);
         }
 
         /// <summary>
@@ -30,15 +37,11 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         [Fact]
         public async void RoleCommandHandlerTest_Create_Invalid_Mapping(){
             // arrange
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new CreateRoleCommandHandler(repository);
-
             var command = new CreateRoleCommand(){};
             command = null;
 
             // act
-             var ex = await Assert.ThrowsAsync<ApplicationException>(() => handler.Handle(command, CancellationToken.None));
+             var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.MAPPER_ISSUE.ToString());
@@ -51,23 +54,19 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         [Fact]
         public async void RoleCommandHandlerTest_Create_successful(){
             // arrange
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new CreateRoleCommandHandler(repository);
-
             var command = new CreateRoleCommand(){
                 Name = "Role 1"
             };
 
             // act
-             var result = await  handler.Handle(command, CancellationToken.None);
+             var result = await  _handler.Handle(command, CancellationToken.None);
 
             // assert
             result.Should().NotBeNull();
             result.Name.Should().Be("Role 1");
             result.CreatedAt.Should().NotBe(0);
-            result.UpdatedAt.Should().Be(0);
-            result.DeletedAt.Should().Be(0);
+            result.UpdatedAt.Should().BeNull();
+            result.DeletedAt.Should().BeNull();
         }
 
 

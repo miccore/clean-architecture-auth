@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using FluentAssertions;
 using Miccore.CleanArchitecture.Auth.Application.Commands.User;
@@ -18,12 +17,20 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         /// mock class
         /// </summary>
         private readonly UserMockClass _mock;
+        private readonly UserRepository _repository;
+        private readonly UpdateUserPasswordCommandHandler _handler;
 
         /// <summary>
         /// initialisation
         /// </summary>
         public UserCommandHandlerTest_UpdatePassword(){
             _mock = new UserMockClass();
+
+            var mockDb = _mock.GetDbContext().Object;
+            
+            _repository = new UserRepository(mockDb);
+            
+            _handler = new UpdateUserPasswordCommandHandler(_repository);
         }
 
         /// <summary>
@@ -35,15 +42,12 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         [InlineData(1)]
         public async void UserCommandHandlerTest_UpdatePassword_not_found(int id){
             // arrange
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var handler = new UpdateUserPasswordCommandHandler(repository);
             var command = new UpdateUserPasswordCommand(){
                 Id = id
             };
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.NOT_FOUND.ToString());
@@ -59,7 +63,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         public async void UserCommandHandlerTest_UpdatePassword_deleted(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 1,
                     FirstName = "User 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -67,15 +71,12 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var handler = new UpdateUserPasswordCommandHandler(repository);
             var command = new UpdateUserPasswordCommand(){
                 Id = id
             };
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.NOT_FOUND.ToString());
@@ -91,7 +92,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         public async void UserCommandHandlerTest_UpdatePassword_dont_match(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 1,
                     FirstName = "User 1",
                     Password = BC.HashPassword("password"),
@@ -100,17 +101,14 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var handler = new UpdateUserPasswordCommandHandler(repository);
             var command = new UpdateUserPasswordCommand(){
                 Id = id,
                 NewPassword = "Password",
-                OldPassword = "passord",
+                OldPassword = "password",
             };
 
               // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.USER_NOT_FOUND_OR_PASSWORD_INCORRECT.ToString());
@@ -126,7 +124,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         public async void UserCommandHandlerTest_UpdatePassword_successfull(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 1,
                     FirstName = "User 1",
                     Password = BC.HashPassword("password"),
@@ -135,17 +133,14 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var handler = new UpdateUserPasswordCommandHandler(repository);
             var command = new UpdateUserPasswordCommand(){
-                Id = 1,
+                Id = id,
                 NewPassword = "Password",
                 OldPassword = "password",
             };
 
             // act
-            var result = await  handler.Handle(command, CancellationToken.None);
+            var result = await  _handler.Handle(command, CancellationToken.None);
 
             // assert
            result.Id.Should().Be(id);

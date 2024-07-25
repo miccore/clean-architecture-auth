@@ -5,6 +5,7 @@ using Miccore.CleanArchitecture.Auth.Application.Commands.User;
 using Miccore.CleanArchitecture.Auth.Application.Handlers.User.CommandHandlers;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Infrastructure.Repositories;
+using Miccore.CleanArchitecture.Auth.UnitTest.Role;
 using Xunit;
 
 namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
@@ -15,12 +16,26 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         /// mock class
         /// </summary>
         private readonly UserMockClass _mock;
+        private readonly RoleMockClass _roleMock;
+        private readonly UserRepository _repository;
+        private readonly RoleRepository _roleRepository;
+        private readonly CreateUserCommandHandler _handler;
 
         /// <summary>
         /// initialisation of test objects
         /// </summary>
         public UserCommandHandlerTest_Create(){
             _mock = new UserMockClass();
+            _roleMock = new RoleMockClass();
+
+            var mockDb = _mock.GetDbContext().Object;
+            var rolemockdb = _roleMock.GetDbContext().Object;
+            
+            _repository = new UserRepository(mockDb);
+            
+            _roleRepository = new RoleRepository(rolemockdb);
+            
+            _handler = new CreateUserCommandHandler(_repository, _roleRepository);
         }
 
         /// <summary>
@@ -30,16 +45,11 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         [Fact]
         public async void UserCommandHandlerTest_Create_Invalid_Mapping(){
             // arrange
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var roleRepository = new RoleRepository(mockDb);
-            var handler = new CreateUserCommandHandler(repository, roleRepository);
-
             var command = new CreateUserCommand(){};
             command = null;
 
             // act
-             var ex = await Assert.ThrowsAsync<ApplicationException>(() => handler.Handle(command, CancellationToken.None));
+             var ex = await Assert.ThrowsAsync<ApplicationException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.MAPPER_ISSUE.ToString());
@@ -52,17 +62,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         [Fact]
         public async void UserCommandHandlerTest_Create_successful(){
             // arrange
-             _mock._role_data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.Role(){
-                    Id = 1,
-                    Name = "User"
-                }
-            );
-            var mockDb = _mock.GetDbContext().Object;
-            var mockRole = _mock.GetRoleDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var roleRepository = new RoleRepository(mockRole);
-            var handler = new CreateUserCommandHandler(repository, roleRepository);
+            _roleMock.GenerateData(2);
 
             var command = new CreateUserCommand(){
                 FirstName = "User 1",
@@ -71,14 +71,14 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
             };
 
             // act
-             var result = await  handler.Handle(command, CancellationToken.None);
+             var result = await  _handler.Handle(command, CancellationToken.None);
 
             // assert
             result.Should().NotBeNull();
             result.FirstName.Should().Be("User 1");
             result.CreatedAt.Should().NotBe(0);
-            result.UpdatedAt.Should().Be(0);
-            result.DeletedAt.Should().Be(0);
+            result.UpdatedAt.Should().BeNull();
+            result.DeletedAt.Should().BeNull();
         }
 
 

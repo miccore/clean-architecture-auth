@@ -1,30 +1,25 @@
-using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
-using MediatR;
-using Miccore.CleanArchitecture.Auth.Api.Controllers;
 using Miccore.CleanArchitecture.Auth.Application.Handlers.User.QueryHandlers;
 using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Queries.User;
 using Miccore.CleanArchitecture.Auth.Application.Responses.User;
-using Miccore.CleanArchitecture.Auth.Core.Repositories;
 using Miccore.Pagination.Model;
-using Moq;
 using Xunit;
-using System;
 using Miccore.CleanArchitecture.Auth.Core.Utils;
-using Miccore.CleanArchitecture.Auth.Infrastructure.Data;
 using Miccore.CleanArchitecture.Auth.Infrastructure.Repositories;
 
 namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
 {
-    
+
     /// <summary>
     /// user query handler test class for get all users
     /// </summary>
     public class UserQueryTestHandler_GetAll
     {
+        private readonly UserRepository _repository;
+        private readonly GetAllUserQueryHandler _handler;
+
         /// <summary>
         /// query element
         /// </summary>
@@ -46,6 +41,12 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
 
             // databse d=context
             _mock = new UserMockClass();
+
+            var mockDbContext = _mock.GetDbContext().Object;
+            
+            _repository = new UserRepository(mockDbContext);
+            
+            _handler = new GetAllUserQueryHandler(_repository);
             
         }
 
@@ -55,13 +56,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
         [Fact]
         public async void UserQueryTestHandler_GetAll_ReturnEmptyElements(){
             // arrange
-            var mockDbContext = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDbContext);
-            var handler = new GetAllUserQueryHandler(repository);
 
             //act
             // get servie data
-            var handle = await handler.Handle(_query, CancellationToken.None);
+            var handle = await _handler.Handle(_query, CancellationToken.None);
             var result = UserMapper.Mapper.Map<PaginationModel<UserResponse>>(handle);
 
             // assert
@@ -79,20 +77,9 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
         [Fact]
         public async void UserQueryTestHandler_GetAll_ReturnListOfElements_NotPaginated(){
             //arrange
-            for (int i = 0; i < 9; i++)
-            {
-                _mock._data.Add(
-                        new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
-                            Id = i,
-                            FirstName = "User " + i,
-                            CreatedAt = DateUtils.GetCurrentTimeStamp(),
-                            DeletedAt = 0,
-                            UpdatedAt = 0
-                        }
-                );
-            }
+            _mock.GenerateData(10);
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 10,
                     FirstName = "User 10",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -100,14 +87,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
                     UpdatedAt = 0
                 }
             );
-
-            var mockDbContext = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDbContext);
-            var handler = new GetAllUserQueryHandler(repository);
             _query.query.limit = 5;
            
             //act
-            var handle = await handler.Handle(_query, CancellationToken.None);
+            var handle = await _handler.Handle(_query, CancellationToken.None);
             var result = UserMapper.Mapper.Map<PaginationModel<UserResponse>>(handle);
             
             
@@ -126,20 +109,9 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
         [Fact]
         public async void UserQueryTestHandler_GetAll_ReturnListOfElements_Paginated(){
             //arrange
-            for (int i = 0; i < 9; i++)
-            {
-                _mock._data.Add(
-                        new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
-                            Id = i,
-                            FirstName = "User " + i,
-                            CreatedAt = DateUtils.GetCurrentTimeStamp(),
-                            DeletedAt = 0,
-                            UpdatedAt = 0
-                        }
-                );
-            }
+            _mock.GenerateData(10);
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 10,
                     FirstName = "User 10",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -147,15 +119,11 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Queries
                     UpdatedAt = 0
                 }
             );
-
-            var mockDbContext = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDbContext);
-            var handler = new GetAllUserQueryHandler(repository);
             _query.query.paginate = true;
             _query.query.limit = 5;
            
             //act
-            var handle = await handler.Handle(_query, CancellationToken.None);
+            var handle = await _handler.Handle(_query, CancellationToken.None);
             var result = UserMapper.Mapper.Map<PaginationModel<UserResponse>>(handle);
             
             

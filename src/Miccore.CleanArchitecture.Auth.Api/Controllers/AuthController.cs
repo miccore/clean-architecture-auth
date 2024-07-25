@@ -7,8 +7,6 @@ using Miccore.CleanArchitecture.Auth.Application.Responses.Auth;
 using Miccore.CleanArchitecture.Auth.Application.Responses.User;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Core.Exceptions;
-using Miccore.Pagination.Model;
-using Miccore.Pagination.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;

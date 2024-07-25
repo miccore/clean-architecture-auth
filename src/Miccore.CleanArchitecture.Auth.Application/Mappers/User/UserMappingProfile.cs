@@ -15,15 +15,15 @@ namespace Miccore.CleanArchitecture.Auth.Application.Mappers
             #region createmap
 
             // user response
-            CreateMap<Miccore.CleanArchitecture.Auth.Core.Entities.User, UserResponse>().ReverseMap();
+            CreateMap<Core.Entities.User, UserResponse>().ReverseMap();
             // user create
-            CreateMap<Miccore.CleanArchitecture.Auth.Core.Entities.User, CreateUserCommand>().ReverseMap();
+            CreateMap<Core.Entities.User, CreateUserCommand>().ReverseMap();
             // user update
-            CreateMap<Miccore.CleanArchitecture.Auth.Core.Entities.User, UpdateUserCommand>().ReverseMap();
+            CreateMap<Core.Entities.User, UpdateUserCommand>().ReverseMap();
             // user password update
-            CreateMap<Miccore.CleanArchitecture.Auth.Core.Entities.User, UpdateUserPasswordCommand>().ReverseMap();
+            CreateMap<Core.Entities.User, UpdateUserPasswordCommand>().ReverseMap();
             // user response pagination
-            CreateMap<PaginationModel<Miccore.CleanArchitecture.Auth.Core.Entities.User>, PaginationModel<UserResponse>>().ReverseMap();
+            CreateMap<PaginationModel<Core.Entities.User>, PaginationModel<UserResponse>>().ReverseMap();
 
             #endregion
         }

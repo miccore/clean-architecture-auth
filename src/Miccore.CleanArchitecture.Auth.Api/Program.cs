@@ -1,6 +1,3 @@
-
-using System.Reflection;
-
 namespace Miccore.CleanArchitecture.Auth.Api
 {
     public class Program

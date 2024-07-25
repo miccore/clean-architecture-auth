@@ -11,13 +11,13 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Data
 
         #region dbset
 
-        public DbSet<Miccore.CleanArchitecture.Auth.Core.Entities.User> Users
+        public DbSet<Core.Entities.User> Users
         {
             get;
             set;
         }
 
-        public DbSet<Miccore.CleanArchitecture.Auth.Core.Entities.Role> Roles
+        public DbSet<Core.Entities.Role> Roles
         {
             get;
             set;

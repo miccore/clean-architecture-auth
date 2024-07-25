@@ -3,14 +3,13 @@ using System.Security.Claims;
 using MediatR;
 using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Queries.Auth;
-using Miccore.CleanArchitecture.Auth.Application.Responses.Auth;
 using Miccore.CleanArchitecture.Auth.Application.Responses.User;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.CleanArchitecture.Auth.Core.Repositories;
 
 namespace Miccore.CleanArchitecture.Auth.Application.Handlers.Auth.QueryHandlers
-{   
+{
     /// <summary>
     /// get user by id
     /// </summary>

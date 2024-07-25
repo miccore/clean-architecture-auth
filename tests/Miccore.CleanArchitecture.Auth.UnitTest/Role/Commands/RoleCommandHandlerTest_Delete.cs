@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using FluentAssertions;
 using Miccore.CleanArchitecture.Auth.Application.Commands.Role;
@@ -17,12 +16,20 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         /// mock class
         /// </summary>
         private readonly RoleMockClass _mock;
+        private readonly RoleRepository _repository;
+        private readonly DeleteRoleCommandHandler _handler;
 
         /// <summary>
         /// initialisation
         /// </summary>
         public RoleCommandHandlerTest_Delete(){
             _mock = new RoleMockClass();
+
+            var mockDb = _mock.GetDbContext().Object;
+
+            _repository = new RoleRepository(mockDb);
+
+            _handler = new DeleteRoleCommandHandler(_repository);
         }
 
         /// <summary>
@@ -34,13 +41,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         [InlineData(1)]
         public async void RoleCommandHandlerTest_Delete_not_found(int id){
             // arrange
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new DeleteRoleCommandHandler(repository);
             var command = new DeleteRoleCommand(id);
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.NOT_FOUND.ToString());
@@ -56,7 +60,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         public async void RoleCommandHandlerTest_Delete_already_deleted(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.Role(){
+                new Core.Entities.Role(){
                     Id = 1,
                     Name = "Role 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -64,13 +68,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new DeleteRoleCommandHandler(repository);
             var command = new DeleteRoleCommand(id);
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.NOT_FOUND.ToString());
@@ -86,7 +87,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
         public async void RoleCommandHandlerTest_Delete_successful(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.Role(){
+                new Core.Entities.Role(){
                     Id = 1,
                     Name = "Role 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -94,13 +95,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new RoleRepository(mockDb);
-            var handler = new DeleteRoleCommandHandler(repository);
             var command = new DeleteRoleCommand(id);
 
             // act
-            var result =  await handler.Handle(command, CancellationToken.None);
+            var result =  await _handler.Handle(command, CancellationToken.None);
 
             // assert
             result.DeletedAt.Should().NotBe(0);

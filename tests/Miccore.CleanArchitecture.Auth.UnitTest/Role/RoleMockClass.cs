@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using Miccore.CleanArchitecture.Auth.Core.Utils;
 using Miccore.CleanArchitecture.Auth.Infrastructure.Data;
-using Miccore.Pagination.Model;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;
@@ -11,14 +9,11 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role
 {
     public class RoleMockClass
     {   
-
-        public List<Miccore.CleanArchitecture.Auth.Core.Entities.Role> _data;
+        public List<Core.Entities.Role> _data;
 
         public RoleMockClass(){
             // iquerable data
-            _data = new List<Core.Entities.Role>(){
-               
-            };
+            _data = new List<Core.Entities.Role>() {};
         }
 
         /// <summary>
@@ -30,11 +25,31 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role
             // context database setup
             var options = new DbContextOptionsBuilder<AuthApplicationDbContext>().Options;
             var mockDbContext = new Mock<AuthApplicationDbContext>(options);
-            mockDbContext.SetupSequence(x => x.Set<Miccore.CleanArchitecture.Auth.Core.Entities.Role>())
+            mockDbContext.SetupSequence(x => x.Set<Core.Entities.Role>())
                         .ReturnsDbSet(_data);
             
             // return mock
             return mockDbContext;
+        }
+
+        /// <summary>
+        /// générate data from roles
+        /// </summary>
+        /// <param name="size"></param> <summary>
+        public void GenerateData(int size){
+
+            for (int i = 1; i <= size; i++)
+            {
+                _data.Add(
+                        new Core.Entities.Role(){
+                            Id = i,
+                            Name = "Role " + i,
+                            CreatedAt = DateUtils.GetCurrentTimeStamp(),
+                            DeletedAt = 0,
+                            UpdatedAt = 0
+                        }
+                );
+            }
         }
 
     }

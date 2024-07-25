@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
 {
-    public class UserRepository : Repository<Miccore.CleanArchitecture.Auth.Core.Entities.User>, IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
         /// <summary>
         /// Auth repository
@@ -25,9 +25,9 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public async Task<Core.Entities.User> GetSingleByEmailAsync(string Email)
+        public async Task<User> GetSingleByEmailAsync(string Email)
         {
-             var user = await _context.Set<Core.Entities.User>()
+             var user = await _context.Set<User>()
                                     .Include(x => x.Role)
                                     .FirstOrDefaultAsync(x => x.Email == Email && x.DeletedAt == 0);
             
@@ -44,9 +44,9 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         /// </summary>
         /// <param name="phone"></param>
         /// <returns></returns>
-        public async Task<Core.Entities.User> GetSingleByPhoneAsync(string phone)
+        public async Task<User> GetSingleByPhoneAsync(string phone)
         {
-            var user = await _context.Set<Core.Entities.User>()
+            var user = await _context.Set<User>()
                                     .Include(x => x.Role)
                                     .FirstOrDefaultAsync(x => x.Phone == phone && x.DeletedAt == 0);
             
@@ -64,9 +64,9 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         /// </summary>
         /// <param name="refresh"></param>
         /// <returns></returns>
-        public async Task<Core.Entities.User> GetSingleByRefreshTokenAsync(string refresh)
+        public async Task<User> GetSingleByRefreshTokenAsync(string refresh)
         {
-            var user = await _context.Set<Core.Entities.User>()
+            var user = await _context.Set<User>()
                                     .Include(x => x.Role)
                                     .FirstOrDefaultAsync(x => x.RefreshToken == refresh && x.DeletedAt == 0);
             
@@ -83,11 +83,11 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         /// </summary>
         /// <param name="auth"></param>
         /// <returns></returns>
-        public new async Task<Core.Entities.User> UpdateAsync(Miccore.CleanArchitecture.Auth.Core.Entities.User entity)
+        public new async Task<User> UpdateAsync(User entity)
         {
             Contract.Requires(entity is not null);
 
-            var user = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == entity.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
+            var user = await _context.Set<User>().FirstOrDefaultAsync(x => x.Id == entity.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
 
             user = SetValueForUpdateAsync(entity, user);
             user.UpdatedAt = DateUtils.GetCurrentTimeStamp();
@@ -103,11 +103,11 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         /// <param name="oldpassword"></param>
         /// <param name="newpassword"></param>
         /// <returns></returns>
-        public async Task<Core.Entities.User> UpdatePasswordAsync(User entity, string newPassword)
+        public async Task<User> UpdatePasswordAsync(User entity, string newPassword)
         {
             Contract.Requires(entity is not null);
             
-            var user = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == entity.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
+            var user = await _context.Set<User>().FirstOrDefaultAsync(x => x.Id == entity.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
 
             user.Password = newPassword;
             user.UpdatedAt = DateUtils.GetCurrentTimeStamp();
@@ -125,7 +125,7 @@ namespace Miccore.CleanArchitecture.Auth.Infrastructure.Repositories
         {
             Contract.Requires(user is not null);
 
-            var userGet = await _context.Set<Core.Entities.User>().FirstOrDefaultAsync(x => x.Id == user.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
+            var userGet = await _context.Set<User>().FirstOrDefaultAsync(x => x.Id == user.Id && (x.DeletedAt == 0 || x.DeletedAt == null)) ?? throw new NotFoundException(ExceptionEnum.USER_NOT_FOUND.ToString());
 
             userGet.RefreshToken = user.RefreshToken;
             userGet.UpdatedAt = DateUtils.GetCurrentTimeStamp();

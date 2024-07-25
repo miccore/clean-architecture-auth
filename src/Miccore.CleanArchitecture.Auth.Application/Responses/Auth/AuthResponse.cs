@@ -7,7 +7,7 @@ namespace Miccore.CleanArchitecture.Auth.Application.Responses.Auth
             get;
             set;
         }
-        public Miccore.CleanArchitecture.Auth.Core.Entities.User User
+        public Core.Entities.User User
         {
             get;
             set;

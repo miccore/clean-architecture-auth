@@ -5,13 +5,13 @@ namespace Miccore.CleanArchitecture.Auth.Core.Repositories
     /// <summary>
     /// User repository interface
     /// </summary>
-    public interface IUserRepository : IRepository<Miccore.CleanArchitecture.Auth.Core.Entities.User>
+    public interface IUserRepository : IRepository<Entities.User>
     {
         // custom operations here
-        Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> GetSingleByPhoneAsync(string phone);
-        Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> GetSingleByEmailAsync(string Email);
-        Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> GetSingleByRefreshTokenAsync(string refresh);
-        Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> UpdatePasswordAsync(Miccore.CleanArchitecture.Auth.Core.Entities.User entity, string newPassword);
-        Task<Miccore.CleanArchitecture.Auth.Core.Entities.User> UpdateRefreshTokenAsync(Miccore.CleanArchitecture.Auth.Core.Entities.User user);
+        Task<Entities.User> GetSingleByPhoneAsync(string phone);
+        Task<Entities.User> GetSingleByEmailAsync(string Email);
+        Task<Entities.User> GetSingleByRefreshTokenAsync(string refresh);
+        Task<Entities.User> UpdatePasswordAsync(Entities.User entity, string newPassword);
+        Task<Entities.User> UpdateRefreshTokenAsync(Entities.User user);
     }   
 }

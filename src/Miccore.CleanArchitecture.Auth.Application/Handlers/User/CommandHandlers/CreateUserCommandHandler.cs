@@ -36,7 +36,7 @@ namespace Miccore.CleanArchitecture.Auth.Application.Handlers.User.CommandHandle
         public async Task<UserResponse> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             // map request with the entity
-            var userEntity = UserMapper.Mapper.Map<Miccore.CleanArchitecture.Auth.Core.Entities.User>(request);
+            var userEntity = UserMapper.Mapper.Map<Core.Entities.User>(request);
             
             // check if it's mapped correctly
             if(userEntity is null){

@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using FluentAssertions;
 using Miccore.CleanArchitecture.Auth.Application.Commands.User;
@@ -17,12 +16,20 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         /// mock class
         /// </summary>
         private readonly UserMockClass _mock;
+        private readonly UserRepository _repository;
+        private DeleteUserCommandHandler _handler;
 
         /// <summary>
         /// initialisation
         /// </summary>
         public UserCommandHandlerTest_Delete(){
             _mock = new UserMockClass();
+
+            var mockDb = _mock.GetDbContext().Object;
+            
+            _repository = new UserRepository(mockDb);
+            
+            _handler = new DeleteUserCommandHandler(_repository);
         }
 
         /// <summary>
@@ -32,15 +39,14 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         /// <returns></returns>
         [Theory]
         [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
         public async void UserCommandHandlerTest_Delete_not_found(int id){
             // arrange
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var handler = new DeleteUserCommandHandler(repository);
             var command = new DeleteUserCommand(id);
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.NOT_FOUND.ToString());
@@ -52,11 +58,11 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         /// <param name="id"></param>
         /// <returns></returns>
         [Theory]
-        [InlineData(1)]
+        [InlineData(2)]
         public async void UserCommandHandlerTest_Delete_already_deleted(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 1,
                     FirstName = "User 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -64,13 +70,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var handler = new DeleteUserCommandHandler(repository);
             var command = new DeleteUserCommand(id);
 
             // act
-            var ex = await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
+            var ex = await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
 
             // assert
             ex.Message.Should().BeEquivalentTo(ExceptionEnum.NOT_FOUND.ToString());
@@ -86,7 +89,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
         public async void UserCommandHandlerTest_Delete_successful(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.User(){
+                new Core.Entities.User(){
                     Id = 1,
                     FirstName = "User 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -94,13 +97,10 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.User.Commands
                     UpdatedAt = 0
                 }
             );
-            var mockDb = _mock.GetDbContext().Object;
-            var repository = new UserRepository(mockDb);
-            var handler = new DeleteUserCommandHandler(repository);
             var command = new DeleteUserCommand(id);
 
             // act
-            var result =  await handler.Handle(command, CancellationToken.None);
+            var result =  await _handler.Handle(command, CancellationToken.None);
 
             // assert
             result.DeletedAt.Should().NotBe(0);

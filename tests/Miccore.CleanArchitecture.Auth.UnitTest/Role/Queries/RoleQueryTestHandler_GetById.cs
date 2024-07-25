@@ -1,10 +1,7 @@
-using System;
 using System.Threading;
 using FluentAssertions;
 using Miccore.CleanArchitecture.Auth.Application.Handlers.Role.QueryHandlers;
-using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Queries.Role;
-using Miccore.CleanArchitecture.Auth.Application.Responses.Role;
 using Miccore.CleanArchitecture.Auth.Core.Enumerations;
 using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.CleanArchitecture.Auth.Core.Utils;
@@ -62,7 +59,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Queries
         public async void RoleQueryTestHandler_GetById_throw_not_found_with_Data_Deleted(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.Role(){
+                new Core.Entities.Role(){
                     Id = 1,
                     Name = "Role 1",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),
@@ -95,7 +92,7 @@ namespace Miccore.CleanArchitecture.Auth.UnitTest.Role.Queries
         public async void RoleQueryTestHandler_GetById_found(int id){
             // arrange
             _mock._data.Add(
-                new Miccore.CleanArchitecture.Auth.Core.Entities.Role(){
+                new Core.Entities.Role(){
                     Id = 12,
                     Name = "Role 2",
                     CreatedAt = DateUtils.GetCurrentTimeStamp(),

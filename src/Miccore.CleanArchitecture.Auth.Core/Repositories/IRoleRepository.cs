@@ -5,7 +5,7 @@ namespace Miccore.CleanArchitecture.Auth.Core.Repositories
     /// <summary>
     /// Role repository interface
     /// </summary>
-    public interface IRoleRepository : IRepository<Miccore.CleanArchitecture.Auth.Core.Entities.Role>
+    public interface IRoleRepository : IRepository<Entities.Role>
     {
         // custom operations here
         

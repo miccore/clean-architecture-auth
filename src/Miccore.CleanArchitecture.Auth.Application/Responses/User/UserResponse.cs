@@ -46,7 +46,7 @@ namespace Miccore.CleanArchitecture.Auth.Application.Responses.User
             set;
         }
 
-        public Miccore.CleanArchitecture.Auth.Core.Entities.Role? Role
+        public Core.Entities.Role? Role
         {
             get;
         }

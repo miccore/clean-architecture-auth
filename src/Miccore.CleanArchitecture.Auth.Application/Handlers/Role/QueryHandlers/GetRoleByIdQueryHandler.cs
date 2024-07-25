@@ -2,12 +2,10 @@ using MediatR;
 using Miccore.CleanArchitecture.Auth.Application.Mappers;
 using Miccore.CleanArchitecture.Auth.Application.Queries.Role;
 using Miccore.CleanArchitecture.Auth.Application.Responses.Role;
-using Miccore.CleanArchitecture.Auth.Core.Enumerations;
-using Miccore.CleanArchitecture.Auth.Core.Exceptions;
 using Miccore.CleanArchitecture.Auth.Core.Repositories;
 
 namespace Miccore.CleanArchitecture.Auth.Application.Handlers.Role.QueryHandlers
-{   
+{
     /// <summary>
     /// get role by id
     /// </summary>

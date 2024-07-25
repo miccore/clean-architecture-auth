@@ -29,7 +29,7 @@ namespace Miccore.CleanArchitecture.Auth.Core.Utils
         /// </summary>
         /// <param name="User"></param>
         /// <returns></returns>
-         public static string GenerateToken(Miccore.CleanArchitecture.Auth.Core.Entities.User User)
+         public static string GenerateToken(Entities.User User)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("322e9998-f1f0-494a-9b9d-aea4e0008888"));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

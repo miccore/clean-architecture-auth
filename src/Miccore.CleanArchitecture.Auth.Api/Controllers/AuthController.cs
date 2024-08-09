@@ -1,4 +1,5 @@
 using System.Net;
+using Asp.Versioning;
 using MediatR;
 using Miccore.CleanArchitecture.Auth.Api.Validators.User;
 using Miccore.CleanArchitecture.Auth.Application.Commands.Auth;
@@ -17,8 +18,9 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
     /// user api controller
     /// </summary>
 
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class AuthController : BaseController
     {
         private readonly IMediator _mediator;
@@ -53,7 +55,7 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
                 var loggedIn = await _mediator.Send(command);
 
                 //Response cookies
-                Response.Cookies.Append("X-Refresh-Token", loggedIn.User.RefreshToken, new CookieOptions(){HttpOnly = true, SameSite = SameSiteMode.None, Secure = true});
+                Response.Cookies.Append("X-Refresh-Token", loggedIn.User.RefreshToken ?? string.Empty, new CookieOptions(){HttpOnly = true, SameSite = SameSiteMode.None, Secure = true});
                 Response.Cookies.Append("X-Access-Token", loggedIn.Token, new CookieOptions(){HttpOnly = true, SameSite = SameSiteMode.None, Secure = true});
 
                 // return response
@@ -93,7 +95,7 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
             try
             {
                 // check cookies
-                if (!(Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshToken)))
+                if (!Request.Cookies.TryGetValue("X-Refresh-Token", out var refreshToken))
                     return HandleErrorResponse(HttpStatusCode.BadRequest, ExceptionEnum.COOCKIE_NOT_FOUND.ToString());
 
                 var refresh = Request.Cookies.Where(x => x.Key == "X-Refresh-Token").FirstOrDefault();
@@ -106,7 +108,7 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
                 var refreshed = await _mediator.Send(command);
 
                  //Response cookies
-                Response.Cookies.Append("X-Refresh-Token", refreshed.User.RefreshToken, new CookieOptions(){HttpOnly = true, SameSite = SameSiteMode.None, Secure = true});
+                Response.Cookies.Append("X-Refresh-Token", refreshed.User.RefreshToken ?? string.Empty, new CookieOptions(){HttpOnly = true, SameSite = SameSiteMode.None, Secure = true});
                 Response.Cookies.Append("X-Access-Token", refreshed.Token, new CookieOptions(){HttpOnly = true, SameSite = SameSiteMode.None, Secure = true});
                 
                 // return response

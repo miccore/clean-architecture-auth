@@ -5,6 +5,7 @@ using Miccore.CleanArchitecture.Auth.Application.Dependency;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Asp.Versioning;
 
 namespace Miccore.CleanArchitecture.Auth.Api
 {
@@ -103,6 +104,19 @@ namespace Miccore.CleanArchitecture.Auth.Api
                         .AllowAnyMethod()
                         .AllowCredentials();
                 });
+            });
+            services.AddApiVersioning(opt => {
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ReportApiVersions = true;
+                opt.ApiVersionReader = ApiVersionReader.Combine(
+                    new QueryStringApiVersionReader("api-version"),
+                    new HeaderApiVersionReader("X-Version"),
+                    new MediaTypeApiVersionReader("ver")
+                );
+            }).AddApiExplorer(opt => {
+                opt.GroupNameFormat = "'v'VVV";
+                opt.SubstituteApiVersionInUrl = true;
             });
             #endregion
 

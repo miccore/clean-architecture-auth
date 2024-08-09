@@ -1,7 +1,7 @@
 {
     "Routes": [
 		{ 
-			"DownstreamPathTemplate": "/auth/authenticated",
+			"DownstreamPathTemplate": "/{version}/auth/authenticated",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [
 				{
@@ -9,12 +9,12 @@
 					"Port": 5081
 				}
 			],
-			"UpstreamPathTemplate": "/api/auth/authenticated",
+			"UpstreamPathTemplate": "/api/{version}/auth/authenticated",
 			"UpstreamHttpMethod":[ "GET", "OPTIONS"],
 			"SwaggerKey": "Auths"
 		}, 
 		{ 
-			"DownstreamPathTemplate": "/auth/login",
+			"DownstreamPathTemplate": "/{version}/auth/login",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [
 				{
@@ -22,12 +22,12 @@
 					"Port": 5081
 				}
 			],
-			"UpstreamPathTemplate": "/api/auth/login",
+			"UpstreamPathTemplate": "/api/{version}/auth/login",
 			"UpstreamHttpMethod":[ "POST", "OPTIONS"],
 			"SwaggerKey": "Auths"
 		}, 
 		{ 
-			"DownstreamPathTemplate": "/auth/refresh/token",
+			"DownstreamPathTemplate": "/{version}/auth/refresh/token",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [
 				{
@@ -35,12 +35,12 @@
 					"Port": 5081
 				}
 			],
-			"UpstreamPathTemplate": "/api/auth/refresh/token",
+			"UpstreamPathTemplate": "/api/{version}/auth/refresh/token",
 			"UpstreamHttpMethod":[ "GET", "OPTIONS"],
 			"SwaggerKey": "Auths"
 		}, 
 		{ 
-			"DownstreamPathTemplate": "/role/{id}",
+			"DownstreamPathTemplate": "/{version}/role/{id}",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [
 				{
@@ -48,12 +48,12 @@
 					"Port": 5081
 				}
 			],
-			"UpstreamPathTemplate": "/api/role/{id}",
+			"UpstreamPathTemplate": "/api/{version}/role/{id}",
 			"UpstreamHttpMethod":[ "GET", "PUT", "DELETE", "OPTIONS" ],
 			"SwaggerKey": "Auths"
 		},
 		{ 
-			"DownstreamPathTemplate": "/role",
+			"DownstreamPathTemplate": "/{version}/role",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [
 				{
@@ -61,12 +61,12 @@
 					"Port": 5081
 				}
 			],
-			"UpstreamPathTemplate": "/api/role",
+			"UpstreamPathTemplate": "/api/{version}/role",
 			"UpstreamHttpMethod":[ "POST", "GET", "OPTIONS" ],
 			"SwaggerKey": "Auths"
 		}, 
 		{ 
-			"DownstreamPathTemplate": "/user",
+			"DownstreamPathTemplate": "/{version}/user",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [
 				{
@@ -74,12 +74,12 @@
 					"Port": 5081
 				}
 			],
-			"UpstreamPathTemplate": "/api/user",
+			"UpstreamPathTemplate": "/api/{version}/user",
 			"UpstreamHttpMethod":[ "POST", "GET", "OPTIONS" ],
 			"SwaggerKey": "Auths"
 		}, 
 		{ 
-			"DownstreamPathTemplate": "/user/{id}",
+			"DownstreamPathTemplate": "/{version}/user/{id}",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [
 				{
@@ -87,12 +87,12 @@
 					"Port": 5081
 				}
 			],
-			"UpstreamPathTemplate": "/api/user/{id}",
+			"UpstreamPathTemplate": "/api/{version}/user/{id}",
 			"UpstreamHttpMethod":[ "GET", "PUT", "DELETE", "OPTIONS" ],
 			"SwaggerKey": "Auths"
 		},
 		{ 
-			"DownstreamPathTemplate": "/user/update/password",
+			"DownstreamPathTemplate": "/{version}/user/update/password",
 			"DownstreamScheme": "http",
 			"DownstreamHostAndPorts": [
 				{
@@ -100,7 +100,7 @@
 					"Port": 5081
 				}
 			],
-			"UpstreamPathTemplate": "/api/user/update/password",
+			"UpstreamPathTemplate": "/api/{version}/user/update/password",
 			"UpstreamHttpMethod":[ "PUT", "OPTIONS" ],
 			"SwaggerKey": "Auths"
 		}

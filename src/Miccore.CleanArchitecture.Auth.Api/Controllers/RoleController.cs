@@ -1,4 +1,5 @@
 using System.Net;
+using Asp.Versioning;
 using MediatR;
 using Miccore.CleanArchitecture.Auth.Api.Validators.Role;
 using Miccore.CleanArchitecture.Auth.Application.Commands.Role;
@@ -15,8 +16,9 @@ namespace Miccore.CleanArchitecture.Auth.Api.Controllers
     /// role api controller
     /// </summary>
 
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class RoleController : BaseController
     {
         private readonly IMediator _mediator;
